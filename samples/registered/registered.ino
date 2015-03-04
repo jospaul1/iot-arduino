@@ -1,6 +1,6 @@
 #include <SPI.h>
 #include <Ethernet.h>
-#include <EthernetStack.h>
+#include <IPStack.h>
 #include <Countdown.h>
 #include <MQTTClient.h>
 
@@ -18,14 +18,21 @@ int ledPin = 13;
 
 #define CLIENT_ID "d:uguhsp:iotsample-arduino:00aabbccde03"
 #define MS_PROXY "uguhsp.messaging.internetofthings.ibmcloud.com"
-#define AUTHTOKEN "password"
+#define AUTHTOKEN "some password"
 // Update these with values suitable for your network.
 byte mac[] = { 0x00, 0xAA, 0xBB, 0xCC, 0xDE, 0x03 };
 
 void callback(char* topic, byte* payload, unsigned int length);
 
-EthernetStack ipstack;  
-MQTT::Client<EthernetStack, Countdown, MQTT_MAX_PACKET_SIZE> client(ipstack);
+//For Arduino Yun, instantiate a YunClient and use the instance to declare
+//an IPStack ipstack(c) instead of EthernetStack with c being the YunClient
+// e.g. YunClient c;
+// IPStack ipstack(c);
+EthernetClient c; // replace by a YunClient if running on a Yun
+IPStack ipstack(c);
+
+MQTT::Client<IPStack, Countdown, 100, 1> client = MQTT::Client<IPStack, Countdown, 100, 1>(ipstack);
+
 void messageArrived(MQTT::MessageData& md);
 
 String deviceEvent;

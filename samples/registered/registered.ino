@@ -15,14 +15,11 @@
 
 int ledPin = 13;
 
-
 #define CLIENT_ID "d:uguhsp:iotsample-arduino:00aabbccde03"
 #define MS_PROXY "uguhsp.messaging.internetofthings.ibmcloud.com"
 #define AUTHTOKEN "some password"
 // Update these with values suitable for your network.
 byte mac[] = { 0x00, 0xAA, 0xBB, 0xCC, 0xDE, 0x03 };
-
-void callback(char* topic, byte* payload, unsigned int length);
 
 //For Arduino Yun, instantiate a YunClient and use the instance to declare
 //an IPStack ipstack(c) instead of EthernetStack with c being the YunClient
@@ -109,33 +106,12 @@ void loop() {
   client.yield(1000);
 }
 
-void callback(char* topic, byte* payload, unsigned int length) {
-  Serial.println("Message has arrived");
-  
-  char * msg = (char *)malloc(length * sizeof(char));
-  int count = 0;
-  for(count = 0 ; count < length ; count++) {
-    msg[count] = payload[count];
-  }
-  msg[count] = '\0';
-  Serial.println(msg);
-  
-  if(length > 0) {
-    digitalWrite(ledPin, HIGH);
-    delay(1000);
-    digitalWrite(ledPin, LOW);  
-  }
-
-  free(msg);
-}
-
 void messageArrived(MQTT::MessageData& md) {
   Serial.print("\nMessage Received\t");
     MQTT::Message &message = md.message;
     int topicLen = strlen(md.topicName.lenstring.data) + 1;
 
-    char * topic = (char *)malloc(topicLen * sizeof(char));
-    topic = md.topicName.lenstring.data;
+    char * topic = md.topicName.lenstring.data;
     topic[topicLen] = '\0';
     
     int payloadLen = message.payloadlen + 1;

@@ -7,6 +7,7 @@
 #define MS_PROXY "quickstart.messaging.internetofthings.ibmcloud.com"
 #define MQTT_PORT 1883
 #define MQTT_MAX_PACKET_SIZE 100
+//#include will be needed depending on your Ethernet shield type
 
 // Update these with values suitable for your network.
 byte mac[] = { 0x11, 0xBB, 0xCC, 0xDD, 0xEF, 0x03 };
